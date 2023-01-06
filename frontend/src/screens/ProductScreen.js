@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useReducer } from "react";
+import React, { useContext, useEffect, useReducer } from "react";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import ListGroup from "react-bootstrap/ListGroup";
@@ -12,6 +12,7 @@ import { Helmet } from "react-helmet-async";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
 import { getError } from "../utils";
+import { Store } from "../contexxts/store/StoreContext";
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -34,7 +35,8 @@ const reducer = (state, action) => {
     }
 };
 
-export default function ProductScreen() {
+
+export default function  ProductScreen() {
     const params = useParams();
     const { slug } = params;
     const [{ loading, error, product }, dispatch] = useReducer(reducer, {
@@ -45,7 +47,7 @@ export default function ProductScreen() {
     useEffect(() => {
         const fetchData = async () => {
             dispatch({ type: "FETCH_REQUEST" });
-
+            
             try {
                 const result = await axios.get(`/api/products/slug/${slug}`);
                 dispatch({ type: "FETCH_SUCCESS", payload: result.data });
@@ -53,9 +55,32 @@ export default function ProductScreen() {
                 dispatch({ type: "FETCH_FAIL", payload: getError(error) });
             }
         };
-
+        
         fetchData();
     }, [slug]);
+
+    const { state, dispatch: cxtDispatch } = useContext(Store);
+    const {cart} = state
+
+
+    const addToCartHandler = async () => {
+        //verificar porque não está enviando o id para o backend
+        const isItemExist = cart.cartItems.find((x) => x._id === product._id)
+        const quantity = isItemExist ? isItemExist.quantity + 1 : 1
+        const {data} = await axios.get(`/api/products/${product._id}`)
+        if (data.countInStock < quantity) {
+            window.alert('Sorry, Product is out of sotck')
+            return
+        }
+    
+
+        cxtDispatch({
+            type: "CART_ADD_ITEM", payload: {
+                ...product,quantity:1
+            }
+        })
+    }
+    
     return loading ? (
         <LoadingBox />
     ) : error ? (
@@ -126,7 +151,7 @@ export default function ProductScreen() {
                                 {product.countInStock > 0 && (
                                     <ListGroup.Item>
                                         <div className="d-grid">
-                                            <Button variant="primary">
+                                            <Button onClick={addToCartHandler} variant="primary">
                                                 Add to cart
                                             </Button>
                                         </div>

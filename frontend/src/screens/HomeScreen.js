@@ -1,6 +1,5 @@
 import React, { useEffect, useReducer} from "react";
 import axios from "axios";
-import logger from "use-reducer-logger";
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Product from "../components/Product";
@@ -32,7 +31,7 @@ const reducer = (state, action) => {
 
 const HomeScreen = () => {
     const [{ loading, error, products }, dispatch] = useReducer(
-        logger(reducer),
+    reducer,
         {
             products: [],
             loading: true,
@@ -48,6 +47,7 @@ const HomeScreen = () => {
                 const result = await axios.get("/api/products");
                 dispatch({ type: "FETCH_SUCCESS", payload: result.data });
             } catch (error) {
+                console.log('bateu o erro')
                 dispatch({ type: "FETCH_FAIL", payload: error.message });
             }
         };
