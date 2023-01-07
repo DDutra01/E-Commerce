@@ -1,68 +1,14 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import HomeScreen from "./screens/HomeScreen";
-import ProductScreen from "./screens/ProductScreen";
-import Container from "react-bootstrap/Container";
-import Navbar from "react-bootstrap/Navbar";
-import Nav from "react-bootstrap/Nav";
-import Badge from "react-bootstrap/Badge";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import { LinkContainer } from "react-router-bootstrap";
-import { Link } from "react-router-dom";
-import { useContext } from "react";
-import { Store } from "./contexxts/store/StoreContext";
-
-
+import { Container} from "react-bootstrap";
+import NavBar from "./components/NavBar";
+import MainRoutes from "./Routes";
 
 function App() {
-    const { state } = useContext(Store)
-    const {cart} = state
-
-
     return (
-        <BrowserRouter>
-            <div className="d-flex flex-column site-container">
-                <header>
-                    <Navbar bg="dark" expand="lg" variant="dark">
-                        <Container>
-                            <LinkContainer to="/">
-                                <Navbar.Brand>amazona</Navbar.Brand>
-                            </LinkContainer>
-                            <Nav>
-                                <Link to="/cart" className='nav-link'>
-                                    <ShoppingCartOutlinedIcon color="#f8f8f8" fontSize="medium" />
-                                    {
-                                        cart.cartItems.length > 0 && (
-                                            <Badge pill bg='danger'>
-                                                {cart.cartItems.length}
-                                            </Badge>
-                                        )
-                                    }
-                                    
-                                </Link>
-
-                               
-                            </Nav>
-                        </Container>
-                    </Navbar>
-                </header>
-                <main>
-                    <Container className="mt-3">
-                        <Routes>
-                            <Route path="/" element={<HomeScreen />} />
-                            <Route
-                                path="/product/:slug"
-                                element={<ProductScreen />}
-                            />
-                        </Routes>
-                    </Container>
-                </main>
-                <footer>
-                    <div className="text-center">
-                        All rights reserved
-                    </div>
-                </footer>
-            </div>
-        </BrowserRouter>
+        <div className="d-flex flex-column site-container">
+                         
+                <MainRoutes />
+            
+        </div>
     );
 }
 

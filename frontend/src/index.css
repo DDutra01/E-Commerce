@@ -42,3 +42,7 @@ main{
 }
 .rating span {
   color: #f3b600}
+
+  .img-thumbnail{
+    height: 80px;
+  }

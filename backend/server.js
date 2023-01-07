@@ -22,7 +22,7 @@ app.get("/api/products/slug/:slug", (req, res) => {
    
    
 });
-app.get("/api/products/:id", (req, res) => {
+app.get("/api/products/:_id", (req, res) => {
     const { _id } = req.params
     console.log(_id)
     try {
