@@ -1,7 +1,11 @@
+import bcrypt from 'bcryptjs'
+
 const data = {
+
+
     products: [
         {
-            _id: "1",
+            // _id: "1",
             name: "Nike Slim Shirt",
             slug: "nike-slim-shirt",
             category: "Shirts",
@@ -14,7 +18,6 @@ const data = {
             image: "./images/shirtNike.jpg", // 679px 829px
         },
         {
-            _id: "2",
             name: "Nike Slim Shorts",
             slug: "nike-slim-Shorts",
             category: "Shirts",
@@ -27,7 +30,6 @@ const data = {
             image: "/images/shortsNike.jpg",
         },
         {
-            _id: "3",
             name: "Adidas Slim Pants",
             slug: "Adidas-slim-Pants",
             category: "Shirts",
@@ -40,7 +42,6 @@ const data = {
             image: "/images/pantsAdidas.jpg",
         },
         {
-            _id: "4",
             name: "Adidas Slim Shirt",
             slug: "Adidas-slim-Shirt",
             category: "Shirts",
@@ -53,7 +54,6 @@ const data = {
             image: "/images/shirtsAdidas.jpg",
         },
         {
-            _id: "5",
             name: "Nike Slim pants",
             slug: "nike-slim-pants",
             category: "Shirts",
@@ -66,7 +66,6 @@ const data = {
             image: "/images/pantsNike.jpg",
         },
         {
-            _id: "6",
             name: "NY Slim Shirt",
             slug: "ny-slim-shirt",
             category: "Shirts",
@@ -77,6 +76,20 @@ const data = {
             numReviews: 10,
             description: "high quality shirt",
             image: "/images/shirtsNy.jpg",
+        },
+    ],
+    users: [
+        {
+            name: "Dutra",
+            email: "admin@example.com",
+            password: bcrypt.hashSync("123456"),
+            isAdmin: true,
+        },
+        {
+            name: "John",
+            email: "user@example.com",
+            password: bcrypt.hashSync("123456"),
+            isAdmin: false,
         },
     ],
 };

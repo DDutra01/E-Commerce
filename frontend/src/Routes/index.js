@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import CartScreen from "../screens/CartScreen";
 import HomeScreen from "../screens/HomeScreen";
 import ProductScreen from "../screens/ProductScreen";
+import SigninScreen from "../screens/SigninScreen";
 
 const  MainRoutes = () => {
     return (
@@ -10,6 +11,7 @@ const  MainRoutes = () => {
                 <Route path="/" element={<HomeScreen/>} />
                 <Route path="/product/:slug" element={<ProductScreen/>} />
                 <Route path="/cart" element={<CartScreen/>} />
+                <Route path="/signin" element={<SigninScreen/>} />
             </Routes>
         </BrowserRouter>
     );

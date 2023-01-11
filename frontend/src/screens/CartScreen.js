@@ -47,8 +47,8 @@ const CartScreen = () => {
     };
 
     const checkoutHandler = () => {
-          navigate("/signin?redirect=/shipping");
-    }
+        navigate("/signin?redirect=/shipping");
+    };
 
     return (
         <div className="d-flex flex-column site-container">
@@ -163,7 +163,7 @@ const CartScreen = () => {
                                                 <Button
                                                     type="button"
                                                     variant="primary"
-                                                    onClick={() => checkoutHandler}
+                                                    onClick={checkoutHandler}
                                                     disabled={
                                                         cartItems.length === 0
                                                     }

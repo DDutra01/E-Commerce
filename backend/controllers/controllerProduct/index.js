@@ -1,66 +1,40 @@
 import data from "../../data.js";
 import { BadRequestError, NotFoundError } from "../../helpers/erros.js";
+import Product from "../../models/products/index.js";
 
 export class ProductController {
-    async creact(req, res) {
-        throw new BadRequestError("erro enviado por mim");
+    async create(req, res) {
+      
     }
     async getAllProducts(req, res) {
-        if (!data.products) {
+
+        const products = await Product.find()
+        if (!products) {
             throw new NotFoundError('Not found products')
         }
-        res.send(data.products);
+        res.send(products);
     }
     async getSlugProducts(req, res) {
-        const product = data.products.find(
-            (slugItem) => slugItem.slug === req.params.slug
-        );
+        const isProduct = await Product.findOne({slug : req.params.slug});
 
-        if (!product) {
+        if (!isProduct) {
             throw new NotFoundError("Product not found!");
         }
        
-        res.setHeader("Content-Type", "text/plain").send(product);            
-       
-
-        // throw new BadRequestError("Problem in get product!");         
-
-        // try {
-        //     const product = data.products.find(
-        //         (x) => x.slug === req.params.slug
-        //     );
-        //     if (product) {
-        //         res.send(product);
-        //     } else {
-        //         res.status(404).send({ message: "Product not found" });
-        //     }
-        // } catch (error) {
-        //     res.status(404).send({ message: "Interval error" });
-        // }
-    }
+        res.setHeader("Content-Type", "text/plain").send(isProduct);        
+     }
+   
     async getIdProducts(req, res) {
-        const { _id } = req.params;
+        console.log("chegou", req.params)
+        const isProduct = await Product.findById(req.params);
+        console.log("encontrei ==> :", isProduct)
 
-        const product = data.products.find((idItem) => idItem._id === _id);
-
-        if (!product) {
+        if (!isProduct) {
             throw new NotFoundError("Product not found!");
         }
        
-        res.setHeader("Content-Type", "text/plain").send(product)         
-        
-        // throw new BadRequestError("Problem in get product!");
-        /*   
-        try {
-            const product = data.products.find((x) => x._id === req.params._id);
-            if (product) {
-                res.send(product);
-            } else {
-                res.status(404).send({ message: "Product not found" });
-            }
-        } catch (error) {
-            res.status(500).send({ message: "Interval error" });
-        } */
+        res.setHeader("Content-Type", "text/plain").send(isProduct);       
+       
     }
     async update(req, res) {}
     async delete(req, res) {}
