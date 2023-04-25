@@ -43,7 +43,7 @@ const HomeScreen = () => {
             dispatch({ type: "FETCH_REQUEST" });
 
             try {
-                const result = await axios.get("/api/products");
+                const result = await axios.get("/products/products");
                 dispatch({ type: "FETCH_SUCCESS", payload: result.data });
             } catch (error) {
                 console.log("bateu o erro");
@@ -55,7 +55,8 @@ const HomeScreen = () => {
     }, []);
 
     return (
-        <div className="d-flex flex-column site-container">
+        //<div className="d-flex flex-column site-container">
+        <div>
             <Helmet>
                 <title>Amazona</title>
             </Helmet>

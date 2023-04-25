@@ -8,7 +8,7 @@ import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
 import MessageBox from "../components/MessageBox";
 import { Store } from "../Context/Store/StoreContext";
-import { Container} from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import axios from "axios";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
@@ -23,7 +23,7 @@ const CartScreen = () => {
     const updateCartHandler = async (item, quantity) => {
         //Melhorar isso, não ficar fazendo consulta no backend toda vez.
 
-        const { data } = await axios.get(`api/products/${item._id}`);
+        const { data } = await axios.get(`/products/${item._id}`);
 
         if (data.countInStock < quantity) {
             window.alert("Sorry, Product is out of sotck");
@@ -50,7 +50,26 @@ const CartScreen = () => {
         navigate("/signin?redirect=/shipping");
     };
 
-    return (
+    return cartItems.length === 0 ? (
+        <div className="d-flex flex-column site-container">
+            <Helmet>
+                <title>Shopping Cart</title>
+            </Helmet>
+            <header>
+                <NavBar />
+            </header>
+            <Container>
+                <main>
+                    <h1>Shopping Cart</h1>
+                    <Row className="justify-content-center mt-5">
+                        <Col sm={8}>                            
+                            <Link style={{textDecorationLine:'none',fontSize:20,color:'#000000'}} to="/">Your cart is empty. Go shopping</Link>
+                        </Col>
+                    </Row>
+                </main>
+            </Container>
+        </div>
+    ) : (
         <div className="d-flex flex-column site-container">
             <Helmet>
                 <title>Shopping Cart</title>
@@ -62,13 +81,8 @@ const CartScreen = () => {
                 <main>
                     <h1>Shopping Cart</h1>
                     <Row>
-                        <Col md={8} sm={8}>
-                            {cartItems.length === 0 ? (
-                                <MessageBox>
-                                    Cart is empty.{" "}
-                                    <Link to="/"> Go shopping</Link>
-                                </MessageBox>
-                            ) : (
+                        <Col sm={8}>
+                            <div>
                                 <ListGroup>
                                     {cartItems.map((item) => (
                                         <ListGroup.Item key={item.id}>
@@ -80,8 +94,15 @@ const CartScreen = () => {
                                                         className="img-fluid rounded img-thumbnail"
                                                     />
                                                     <Link
+                                                        style={{
+                                                            textDecorationLine:
+                                                                "none",
+                                                            color: "#404040",
+                                                            fontWeight: 600,
+                                                        }}
                                                         to={`/product/${item.slug}`}
                                                     >
+                                                        {" "}
                                                         {item.name}{" "}
                                                     </Link>
                                                 </Col>
@@ -136,7 +157,7 @@ const CartScreen = () => {
                                         </ListGroup.Item>
                                     ))}
                                 </ListGroup>
-                            )}
+                            </div>
                         </Col>
                         <Col md={4}>
                             <Card>
@@ -179,9 +200,6 @@ const CartScreen = () => {
                     </Row>
                 </main>
             </Container>
-            <footer>
-                <Footer />
-            </footer>
         </div>
     );
 };

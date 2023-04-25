@@ -52,7 +52,7 @@ export default function ProductScreen() {
             dispatch({ type: "FETCH_REQUEST" });
 
             try {
-                const result = await axios.get(`/api/products/slug/${slug}`);
+                const result = await axios.get(`/products/slug/${slug}`);
                 dispatch({ type: "FETCH_SUCCESS", payload: result.data });
             } catch (error) {
                 dispatch({ type: "FETCH_FAIL", payload: getError(error) });
@@ -69,7 +69,7 @@ export default function ProductScreen() {
         //verificar porque não está enviando o id para o backend
         const isItemExist = cart.cartItems.find((x) => x._id === product._id);
         const quantity = isItemExist ? isItemExist.quantity + 1 : 1;
-        const { data } = await axios.get(`/api/products/${product._id}`);
+        const { data } = await axios.get(`/products/${product._id}`);
         if (data.countInStock < quantity) {
             window.alert("Sorry, Product is out of sotck");
             return;
@@ -83,7 +83,7 @@ export default function ProductScreen() {
             },
         });
 
-        navigate("/cart");
+        navigate("/cartShop");
     };
 
     return (
@@ -95,10 +95,12 @@ export default function ProductScreen() {
                 <NavBar />
             </header>
             <Container className="mt-3">
-                <main>{
-                    loading ? (
-                        <LoadingBox />) : error ? (
-                            <MessageBox variant="danger">{error}</MessageBox>) : (
+                <main>
+                    {loading ? (
+                        <LoadingBox />
+                    ) : error ? (
+                        <MessageBox variant="danger">{error}</MessageBox>
+                    ) : (
                         <div>
                             <Row>
                                 <Col md={6}>
@@ -141,7 +143,9 @@ export default function ProductScreen() {
                                                 <ListGroup.Item>
                                                     <Row>
                                                         <Col>Price :</Col>
-                                                        <Col>$ {product.price}</Col>
+                                                        <Col>
+                                                            $ {product.price}
+                                                        </Col>
                                                     </Row>
                                                 </ListGroup.Item>
 
@@ -150,7 +154,7 @@ export default function ProductScreen() {
                                                         <Col>Status :</Col>
                                                         <Col>
                                                             {product.countInStock >
-                                                                0 ? (
+                                                            0 ? (
                                                                 <Badge bg="success">
                                                                     In Stock
                                                                 </Badge>
@@ -183,12 +187,12 @@ export default function ProductScreen() {
                                 </Col>
                             </Row>
                         </div>
-                   
-                    )}</main>
+                    )}
+                </main>
             </Container>
-            <footer>
+          {/*   <footer>
                 <Footer />
-            </footer>
+            </footer> */}
         </div>
     );
 }

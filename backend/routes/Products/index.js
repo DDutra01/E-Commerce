@@ -8,7 +8,7 @@ import { handlerErros } from "../../helpers/adpterErros.js";
 const routesProduct = Router()
 routesProduct.get("/products",handlerErros(new ProductController().getAllProducts));
 routesProduct.get("/create",handlerErros(new ProductController().create));
-routesProduct.get("/:slug",handlerErros(new ProductController().getSlugProducts));
+routesProduct.get("/slug/:slug",handlerErros(new ProductController().getSlugProducts));
 routesProduct.get("/:_id",handlerErros( new ProductController().getIdProducts));
 
 export default routesProduct;

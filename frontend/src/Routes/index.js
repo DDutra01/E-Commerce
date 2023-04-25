@@ -10,7 +10,7 @@ const  MainRoutes = () => {
             <Routes>
                 <Route path="/" element={<HomeScreen/>} />
                 <Route path="/product/:slug" element={<ProductScreen/>} />
-                <Route path="/cart" element={<CartScreen/>} />
+                <Route path="/cartShop" element={<CartScreen/>} />
                 <Route path="/signin" element={<SigninScreen/>} />
             </Routes>
         </BrowserRouter>

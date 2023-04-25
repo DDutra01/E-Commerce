@@ -16,10 +16,10 @@ export default function Product(props) {
 
      const addToCartHandler = async (item) => {
          //Melhorar isso, não ficar fazendo consulta no backend toda vez.
-         const isItemExist =cartItems.find((x) => x._id === product._id);
+         const isItemExist = cartItems.find((x) => x._id === product._id);
          const quantity = isItemExist ? isItemExist.quantity + 1 : 1;
 
-         const { data } = await axios.get(`api/products/${item._id}`);
+         const { data } = await axios.get(`products/${item._id}`);
 
          if (data.countInStock < quantity) {
              window.alert("Sorry, Product is out of sotck");
@@ -45,10 +45,17 @@ export default function Product(props) {
                 />
             </Link>
             <Card.Body>
-                <Link to={`/product/${product.slug}`}>
+                <Link
+                    style={{
+                        textDecorationLine: "none",
+                        color: "#404040",
+                        fontWeight: 600,
+                    }}
+                    to={`/product/${product.slug}`}
+                >
                     <Card.Title>{product.name}</Card.Title>
                 </Link>
-                <Card.Text>${product.price}</Card.Text>
+                <Card.Text style={{fontWeight:600}}>${product.price}</Card.Text>
                 <Rating
                     rating={product.rating}
                     numReviews={product.numReviews}
