@@ -1,13 +1,15 @@
 import Button from "react-bootstrap/Button";
-import { Link, redirect, useLocation } from "react-router-dom";
+import { Link, redirect, useLocation, useNavigate } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import { Helmet } from "react-helmet-async";
 import { useApi } from "../hooks/useApi";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
+import { Store } from "../Context/Store/StoreContext";
 
 export default function SigninScreen() {
+    const navigate = useNavigate();
     const { search } = useLocation();
     const redirectInUrl = new URLSearchParams(search).get("redirect");
     const redirect = redirectInUrl ? redirectInUrl : "/";
@@ -15,16 +17,26 @@ export default function SigninScreen() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+    const { state, dispatch: ctxDispatch } = useContext(Store);
+    const { userInfo } = state;
     const api = useApi();
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        console.log(email, password);
-        try {
-            const user = await api.signin(email, password);
-            console.log(user);
-        } catch (error) {}
+        const user = await api.signin(email, password);
+        if (user) {
+            const { token } = user;
+            ctxDispatch({ type: "USER_SIGNIN", payload: user });
+            localStorage.setItem("userInfo", JSON.stringify(token));
+            navigate(redirect || "/");
+        }
     };
+
+    useEffect(() => {
+        if (userInfo) {
+            navigate(redirect);
+        }
+    }, [navigate, redirect, userInfo]);
 
     return (
         <Container fluid="md">
@@ -40,7 +52,7 @@ export default function SigninScreen() {
                         <Container className="spacerSm" />
                         <Form.Group className="mb-3" controlId="email">
                             <Form.Label>Email</Form.Label>
-                            <Form.Control                               
+                            <Form.Control
                                 type="email"
                                 placeholder="Email"
                                 required

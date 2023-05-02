@@ -2,7 +2,7 @@ import data from "../../data.js";
 import { BadRequestError, NotFoundError } from "../../helpers/erros.js";
 import User from "../../models/users/index.js";
 import bcrypt from "bcryptjs";
-import { genereteToken } from "../../utils/index.js";
+import { genereteToken } from "../../utils/GenerateToken/index.js";
 
 export class UserController {
     async create(req, res) {
@@ -10,10 +10,8 @@ export class UserController {
         const users = await User.insertMany(data.users);
         res.send(users);
     }
-    async signin(req, res) {
-        console.log(req.body);
+    async signin(req, res) {       
         const user = await User.findOne({ email: req.body.email });
-
         if (user) {
             if (bcrypt.compareSync(req.body.password, user.password)) {
                 res.json({

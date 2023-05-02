@@ -2,9 +2,14 @@ import { useReducer } from "react";
 import { Store } from "./StoreContext";
 
 const initialState = {
+    userInfo: localStorage.getItem("userInfo")
+        ? JSON.parse(localStorage.getItem("userInfo"))
+        : null, 
+
     cart: {
-        cartItems: localStorage.getItem('cardItems') ?
-        JSON.parse(localStorage.getItem('cartItems')): [] ,
+        cartItems: localStorage.getItem("cardItems")
+            ? JSON.parse(localStorage.getItem("cartItems"))
+            : [],
     },
 };
 
@@ -22,8 +27,8 @@ function reducer(state, action) {
                       item._id === isItemExist._id ? newItem : item
                   )
                 : [...state.cart.cartItems, newItem];
-            
-            localStorage.setItem('cartItems', JSON.stringify(cartItems))
+
+            localStorage.setItem("cartItems", JSON.stringify(cartItems));
 
             return {
                 ...state,
@@ -45,6 +50,10 @@ function reducer(state, action) {
                 },
             };
         }
+        case "USER_SIGNIN":
+            return { ...state, userInfo: action.payload };
+        case "USER_SIGNOUT":
+            return { ...state, userInfo: null };
         default:
             return state;
     }

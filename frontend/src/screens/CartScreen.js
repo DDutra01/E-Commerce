@@ -6,12 +6,11 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
 import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
-import MessageBox from "../components/MessageBox";
 import { Store } from "../Context/Store/StoreContext";
 import { Container } from "react-bootstrap";
 import axios from "axios";
 import NavBar from "../components/NavBar";
-import Footer from "../components/Footer";
+
 
 const CartScreen = () => {
     const navigate = useNavigate();

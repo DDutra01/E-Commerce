@@ -15,13 +15,14 @@ dotenv.config()
 // mongoose.Promise = global.Promise
 mongoose.set('strictQuery', false)
 mongoose
-    .connect("mongodb://localhost/e-commerce")
+    .connect(process.env.MONGODB_URL)
     .then(() => {
         console.log("databe network");
     })
     .catch((error) => console.log(error));
 
 app.use(express.json());
+app.use(express.urlencoded({extended:true}));
 app.use(cors());
 app.use(logger("dev"));
 
