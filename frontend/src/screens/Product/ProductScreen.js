@@ -4,18 +4,18 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import ListGroup from "react-bootstrap/ListGroup";
 import { useNavigate, useParams } from "react-router-dom";
-import Rating from "../components/Rating";
+import Rating from "../../components/Rating";
 import Card from "react-bootstrap/Card";
 import Badge from "react-bootstrap/Badge";
 import Button from "react-bootstrap/esm/Button";
 import { Helmet } from "react-helmet-async";
-import LoadingBox from "../components/LoadingBox";
-import MessageBox from "../components/MessageBox";
-import { getError } from "../utils";
-import { Store } from "../Context/Store/StoreContext";
-import NavBar from "../components/NavBar";
+import LoadingBox from "../../components/LoadingBox";
+import MessageBox from "../../components/MessageBox";
+import { getError } from "../../utils";
+import { Store } from "../../Context/Store/StoreContext";
+import NavBar from "../../components/NavBar";
 import { Container } from "react-bootstrap";
-import Footer from "../components/Footer";
+import TitlePage from "../../components/Title-page";
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -88,11 +88,9 @@ export default function ProductScreen() {
 
     return (
         <div className="d-flex flex-column site-container">
-            <Helmet>
-                <title>Amazona</title>
-            </Helmet>
+            <TitlePage title="Amazona"></TitlePage>
             <header>
-                <NavBar />
+                <NavBar isShowIcons={true} />
             </header>
             <Container className="mt-3">
                 <main>
@@ -190,7 +188,7 @@ export default function ProductScreen() {
                     )}
                 </main>
             </Container>
-          {/*   <footer>
+            {/*   <footer>
                 <Footer />
             </footer> */}
         </div>

@@ -2,13 +2,13 @@ import React, { useEffect, useReducer } from "react";
 import axios from "axios";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Product from "../components/Product";
-import { Helmet } from "react-helmet-async";
-import LoadingBox from "../components/LoadingBox";
-import MessageBox from "../components/MessageBox";
-import NavBar from "../components/NavBar";
-import Footer from "../components/Footer";
+import Product from "../../components/Product";
+import LoadingBox from "../../components/LoadingBox";
+import MessageBox from "../../components/MessageBox";
+import NavBar from "../../components/NavBar";
+import Footer from "../../components/Footer";
 import { Container } from "react-bootstrap";
+import TitlePage from "../../components/Title-page";
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -57,11 +57,9 @@ const HomeScreen = () => {
     return (
         //<div className="d-flex flex-column site-container">
         <div>
-            <Helmet>
-                <title>Amazona</title>
-            </Helmet>
+            <TitlePage title="Amazona"></TitlePage>
             <header>
-                <NavBar />
+                <NavBar isShowIcons={true} />
             </header>
             <Container className="mt-3">
                 <main>

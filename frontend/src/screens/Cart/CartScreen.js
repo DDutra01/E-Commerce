@@ -4,13 +4,12 @@ import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
-import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
-import { Store } from "../Context/Store/StoreContext";
+import { Store } from "../../Context/Store/StoreContext";
 import { Container } from "react-bootstrap";
 import axios from "axios";
-import NavBar from "../components/NavBar";
-
+import NavBar from "../../components/NavBar";
+import TitlePage from "../../components/Title-page";
 
 const CartScreen = () => {
     const navigate = useNavigate();
@@ -46,23 +45,30 @@ const CartScreen = () => {
     };
 
     const checkoutHandler = () => {
-        navigate("/signin?redirect=/shipping");
+        navigate("/signin?redirect=/shippingAddress");
     };
 
     return cartItems.length === 0 ? (
         <div className="d-flex flex-column site-container">
-            <Helmet>
-                <title>Shopping Cart</title>
-            </Helmet>
+            <TitlePage title="Shopping Cart"></TitlePage>
             <header>
-                <NavBar />
+                <NavBar isShowIcons={true} />
             </header>
             <Container>
                 <main>
                     <h1>Shopping Cart</h1>
                     <Row className="justify-content-center mt-5">
-                        <Col sm={8}>                            
-                            <Link style={{textDecorationLine:'none',fontSize:20,color:'#000000'}} to="/">Your cart is empty. Go shopping</Link>
+                        <Col sm={8}>
+                            <Link
+                                style={{
+                                    textDecorationLine: "none",
+                                    fontSize: 20,
+                                    color: "#000000",
+                                }}
+                                to="/"
+                            >
+                                Your cart is empty. Go shopping
+                            </Link>
                         </Col>
                     </Row>
                 </main>
@@ -70,9 +76,7 @@ const CartScreen = () => {
         </div>
     ) : (
         <div className="d-flex flex-column site-container">
-            <Helmet>
-                <title>Shopping Cart</title>
-            </Helmet>
+            <TitlePage title="Shopping Cart"></TitlePage>
             <header>
                 <NavBar />
             </header>

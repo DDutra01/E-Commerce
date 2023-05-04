@@ -6,6 +6,7 @@
 /frontend/steps
 /.pnp
 .pnp.js
+.to-do
 
 # testing
 /coverage

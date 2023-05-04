@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css'
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import Badge from "react-bootstrap/Badge";
@@ -11,25 +11,27 @@ import { Store } from "../../Context/Store/StoreContext";
 import { LinkContainer } from "react-router-bootstrap";
 import { NavDropdown } from "react-bootstrap";
 
-const NavBar = () => {
+const NavBar = (props) => {
     const { state, dispatch: cxtDispatch } = useContext(Store);
-    const { cart, userInfo } = state;
+    const { cart, userInfo } = state;    
 
     const signoutHandler = () => {
         cxtDispatch({ type: "USER_SIGNOUT" });
         localStorage.removeItem("userInfo");
+        localStorage.removeItem("shippingAddress");
+        localStorage.removeItem("paymentMethod");
     };
 
     return (
         <div>
-            <header>
-                <ToastContainer position="bottom-center" limit={1} />
+            <header>               
                 <Navbar bg="dark" expand="lg" variant="dark">
                     <Container>
                         <LinkContainer to="/">
                             <Navbar.Brand>amazona</Navbar.Brand>
                         </LinkContainer>
-                        <Nav className="justify-content-end align-item-center">
+                        {
+                            props.isShowIcons ? <Nav className="justify-content-end align-item-center">
                             <Link to="/cartShop" className="nav-link">
                                 <ShoppingCartOutlinedIcon
                                     color="#f8f8f8"
@@ -63,7 +65,7 @@ const NavBar = () => {
                                     </LinkContainer>
                                     <NavDropdown.Divider></NavDropdown.Divider>
                                     <Link
-                                        to="#signout"
+                                        to="/"
                                         className="dropdown-item"
                                         onClick={signoutHandler}
                                     >
@@ -79,7 +81,9 @@ const NavBar = () => {
                                     />
                                 </Link>
                             )}
-                        </Nav>
+                        </Nav> : null
+                        }
+                       
                     </Container>
                 </Navbar>
             </header>
