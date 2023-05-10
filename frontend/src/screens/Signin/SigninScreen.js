@@ -2,7 +2,7 @@ import Button from "react-bootstrap/Button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
-import { useApi } from "../../hooks/useApi";
+import {  useUser } from "../../hooks/useUser";
 import { useContext, useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { Store } from "../../Context/Store/StoreContext";
@@ -19,15 +19,15 @@ export default function SigninScreen() {
 
     const { state, dispatch: ctxDispatch } = useContext(Store);
     const { userInfo } = state;
-    const api = useApi();
+    const api = useUser();
 
     const submitHandler = async (e) => {
         e.preventDefault();
         const user = await api.signin(email, password);
         if (user) {
-            const { token } = user;
+            
             ctxDispatch({ type: "USER_SIGNIN", payload: user });
-            localStorage.setItem("userInfo", JSON.stringify(token));
+            localStorage.setItem("userInfo", JSON.stringify(user));
             navigate(redirect || "/");
         }
     };

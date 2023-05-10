@@ -1,11 +1,8 @@
-import axios from "axios";
+import {api} from "../../src/Services/useApi";
 import { toast } from "react-toastify";
 
-
-const api = axios.create({
-    baseURL: "http://localhost:4001",
-});
-export const useApi = () => ({
+export const useUser = () => ({
+ 
     signin: async (email, password) => {
         try {
             const response = await api.post("/user/signin", {
@@ -25,7 +22,7 @@ export const useApi = () => ({
             const response = await api.post("/user/signup", {
                 user,
             });
-           console.log("response", response.data.available);
+
             if (response !== null && response !== "") {
                 if (response.data.available) {
                     console.log("1");

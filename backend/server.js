@@ -8,6 +8,7 @@ import ("express-async-errors");
 import { middleErrors } from "./middlewares/erros/index.js";
 import routesProduct from "./routes/Products/index.js";
 import routesUser from "./routes/Users/index.js";
+import routesOrder from "./routes/Orders/index.js";
 
 const app = express();
 dotenv.config()
@@ -28,6 +29,7 @@ app.use(logger("dev"));
 
 app.use("/products", routesProduct);
 app.use("/user", routesUser);
+app.use("/order", routesOrder);
 
 app.use(middleErrors);
 const port = process.env.PORT || 4001;
