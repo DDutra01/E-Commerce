@@ -9,6 +9,7 @@ import { middleErrors } from "./middlewares/erros/index.js";
 import routesProduct from "./routes/Products/index.js";
 import routesUser from "./routes/Users/index.js";
 import routesOrder from "./routes/Orders/index.js";
+import routesPayment from "./routes/Payment/index.js";
 
 const app = express();
 dotenv.config()
@@ -27,9 +28,12 @@ app.use(express.urlencoded({extended:true}));
 app.use(cors());
 app.use(logger("dev"));
 
+app.use("/payment", routesPayment);
 app.use("/products", routesProduct);
 app.use("/user", routesUser);
 app.use("/order", routesOrder);
+
+
 
 app.use(middleErrors);
 const port = process.env.PORT || 4001;

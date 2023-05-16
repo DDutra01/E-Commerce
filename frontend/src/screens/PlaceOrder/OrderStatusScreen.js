@@ -7,9 +7,19 @@ import { Store } from "../../Context/Store/StoreContext";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useOrder } from "../../hooks/useOrders";
 import NavBar from "../../components/NavBar";
+import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
+import { toast } from "react-toastify";
 
 const OrderStatusScreen = () => {
     const api = useOrder();
+    const { state, dispatch: ctxDispatch } = useContext(Store);
+    const { cart, userInfo } = state;
+    const navigate = useNavigate();
+    const params = useParams();
+    const { id: orderId } = params;
+    const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
+
+    
     const reducer = (state, action) => {
         switch (action.type) {
             case "FETCH_REQUEST":
@@ -26,28 +36,48 @@ const OrderStatusScreen = () => {
             case "FETCH_FAIL":
                 return { ...state, loading: false, error: action.payload };
 
+            case "PAY_RESQUEST":
+                return {
+                    ...state,
+                    loadingPay: true,
+                };
+            case "PAY_SUCCESS":
+                return {
+                    ...state,
+                    loadingPay: false,
+                    successPay: true,
+                };
+            case "PAY_FAIL":
+                return {
+                    ...state,
+                    loadingPay: false,
+                };
+            case "PAY_RESET":
+                return {
+                    ...state,
+                    loadingPay: false,
+                    successPay: false,
+                };
+
             default:
                 return state;
         }
     };
-    const [{ loading, order, error }, dispatch] = useReducer(reducer, {
-        loading: true,
-        order: {},
-        error: "",
-    });
-
-    const { state, dispatch: ctxDispatch } = useContext(Store);
-    const { cart, userInfo } = state;
-    const navigate = useNavigate();
-    const params = useParams();
-    const { id: orderId } = params;
+    const [{ loading, order, error, successPay, loadingPay }, dispatch] =
+        useReducer(reducer, {
+            loading: true,
+            order: {},
+            error: "",
+            successPay: false,
+            loadingPay: false,
+        });
 
     const oders = async () => {
         const id = orderId;
         const { token } = userInfo;
         dispatch({ type: "FETCH_REQUEST" });
         const response = await api.getOrder(id, token);
-        console.log("response", response.data);
+
         if (response.data.success) {
             dispatch({ type: "FETCH_SUCCESS", payload: response.data.order });
         }
@@ -56,14 +86,77 @@ const OrderStatusScreen = () => {
         }
     };
 
+    const loadingPaypalScript = async () => {
+        const { token } = userInfo;
+        const response = await api.paypal(token);
+        if (response.success) {
+            const { data: clientId } = response;
+            paypalDispatch({
+                type: "resetOptions",
+                value: {
+                    "client-id": clientId,
+                    currency: "USD",
+                },
+            });
+            paypalDispatch({ type: "setLoadingStatus", value: "pending" });
+        }
+    };
+
+    function createOrder(data, actions) {
+        return actions.order
+            .create({
+                purchase_units: [
+                    {
+                        amount: { value: order.totalPrice },
+                    },
+                ],
+            })
+            .then((orderId) => {
+                return orderId;
+            });
+    }
+
+    function onAprrove(data, actions) {
+        const { token } = userInfo;
+        return actions.order.capture().then(async function (details) {
+            dispatch({
+                type: "PAY_REQUEST",
+            });
+            const response = await api.paypalRequest(order.id, token, details);
+            if (response.success) {
+                const { data } = response;
+                dispatch({
+                    type: "PAY_SUCCESS",
+                    payload: data,
+                });
+                toast.success("Order is paid");
+            } else {
+                dispatch({
+                    type: "PAY_FAIL",
+                    payload: response,
+                });
+                toast.error("Problem is processing order pay");
+            }
+        });
+    }
+
+    function onError(err) {
+        toast.error('Problem in processing payment, try again');
+    }
+
     useEffect(() => {
         if (!userInfo) {
             return navigate("/signin");
         }
-        if (!order._id || (order._id && order._id !== orderId)) {
+        if (!order._id || successPay || (order._id && order._id !== orderId)) {
             oders();
+            if (successPay) {
+                dispatch({type:'PAY_RESET'})
+            }
+        } else {
+            loadingPaypalScript();
         }
-    }, [order, orderId, userInfo, navigate]);
+    }, [order, orderId, userInfo, navigate, paypalDispatch]);
 
     return (
         <div className="d-flex flex-column site-container">
@@ -72,7 +165,9 @@ const OrderStatusScreen = () => {
                 <NavBar isShowIcons={true} />
             </header>
             {loading ? (
-                <LoadingBox />
+                <div className="d- flex justify-content-center">
+                    <LoadingBox />
+                </div>
             ) : error ? (
                 <MessageBox variant="danger">{error}</MessageBox>
             ) : (
@@ -88,7 +183,8 @@ const OrderStatusScreen = () => {
                                         {order.shippingAddress.fullName}
                                         <br />
                                         <strong>Address: </strong>
-                                        {order.shippingAddress.address},<br />
+                                        {order.shippingAddress.address}
+                                        <br />
                                         {order.shippingAddress.city},<br />
                                         {order.shippingAddress.postalCode},
                                         <br />
@@ -149,6 +245,28 @@ const OrderStatusScreen = () => {
                                                 </Col>
                                             </Row>
                                         </ListGroup.Item>
+                                        {!order.isPaid && (
+                                            <ListGroup.Item>
+                                                {isPending ? (
+                                                    <LoadingBox></LoadingBox>
+                                                ) : (
+                                                    <div>
+                                                        <PayPalButtons 
+                                                            createOrder={
+                                                                createOrder
+                                                            }
+                                                            onApprove={
+                                                                onAprrove
+                                                            }
+                                                            onError={onError}
+                                                        ></PayPalButtons >
+                                                    </div>
+                                                )}
+                                                {loadingPay && (
+                                                    <LoadingBox></LoadingBox>
+                                                )}
+                                            </ListGroup.Item>
+                                        )}
                                     </ListGroup>
                                 </Card.Body>
                             </Card>
@@ -163,6 +281,15 @@ const OrderStatusScreen = () => {
                                         <strong>Method: </strong>
                                         {order.paymentMethod} <br />
                                     </Card.Text>
+                                    {order.isPaid ? (
+                                        <MessageBox variant="success">
+                                            Paid at {order.paidAt}
+                                        </MessageBox>
+                                    ) : (
+                                        <MessageBox variant="danger">
+                                            Not Paid
+                                        </MessageBox>
+                                    )}
                                 </Card.Body>
                             </Card>
                         </Col>
