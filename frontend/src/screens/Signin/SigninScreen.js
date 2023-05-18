@@ -39,7 +39,7 @@ export default function SigninScreen() {
     }, [navigate, redirect, userInfo]);
 
     return (
-        <di>
+        <div>
             <TitlePage title="Amazona - Signin"></TitlePage>
             <Container fluid="md">
                 <Container className="spacer" />
@@ -88,6 +88,6 @@ export default function SigninScreen() {
                     </Col>
                 </Row>
             </Container>
-        </di>
+        </div>
     );
 }
