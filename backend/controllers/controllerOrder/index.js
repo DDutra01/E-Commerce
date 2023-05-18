@@ -17,55 +17,76 @@ export class OrderController {
             totalPrice: req.body.totalPrice,
             user: req.user._id,
         });
-        const orderPayment = await newOrderPayment
-            .save()
-            .then((order) => {
-                console.log("New order salved");
-                if (order !== null && order !== "") {
-                    console.log("Enviei", order);
-                    res.send({
-                        success: "ok",
-                        message: "Order saved",
-                        order,
-                    });
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-                res.send({
-                    message: "Error in save order!",
-                    error: err,
-                });
-            });
+        const orderPayment = await newOrderPayment.save();
 
         if (!orderPayment) {
             throw new BadRequestError("Problem in new Created order");
-           /*  res.status(401).send({
-                message: "Problem in new Created order",
-            }); */
         }
+
+        res.status(200).send({
+            success: true,
+            orderPayment,
+        });
     }
 
     async order(req, res) {
-        const order = await Order.findById(req.params.id)
-            .then((order) => {                
-                if (order !== null && order !== "") {                   
-                    res.status(200).send({
-                        success: "ok",
-                        message: "Order finded",
-                        order,
-                    });
-                    return;
-                }
-            }).catch((err) => {                
-                res.send({
-                    message: "Error in find order!",
-                    error: err,
-                });
-            });
+        const order = await Order.findById(req.params.id);
 
         if (!order) {
             throw new NotFoundError("Order not found!");
         }
+
+        res.status(200).send({
+            success: true,
+            order,
+        });
     }
+
+    async filterOrders(req, res) {       
+
+       const isPaid = req.params.isPaid;
+        console.log("chegou", isPaid);
+     
+        if (isDelivered === null || isDelivered === '' || !isDelivered) {
+            isDelivered = false
+        }
+       /*  if (isPaid === null || isPaid === '' || !isPaid) {
+            isPaid = false
+        }   */      
+
+
+        const result = await Order.find({
+           isPaid
+            //$or: [{ isPaid }, { isDelivered }],
+        });
+        console.log("enviei isso", result);
+
+        if (!result) {
+            throw NotFoundError('Not found order with this filters')
+        }
+
+        res.status(200).send({
+            success: true,
+            orders:result
+        }) 
+    }
+
+  async history(req, res) {    
+
+        const orders = await Order.find({
+            user: req.user._id,        
+        })               
+      
+            
+        if (orders) {
+            res.status(200).send({
+                success: "ok",
+                orders,
+            });
+        }
+
+        if (!orders) {
+            throw new NotFoundError("Order not found!");
+        }
+    } 
 }

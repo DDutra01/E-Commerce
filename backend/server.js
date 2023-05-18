@@ -32,6 +32,10 @@ app.use("/payment", routesPayment);
 app.use("/products", routesProduct);
 app.use("/user", routesUser);
 app.use("/order", routesOrder);
+app.use("/history", routesOrder);
+
+
+
 
 
 

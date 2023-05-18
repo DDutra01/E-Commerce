@@ -5,9 +5,9 @@ import { isAuth } from "../../utils/Auth/index.js";
 
 const routesPayment = Router();
 
-routesPayment.get("/payment",isAuth, handlerErros(new PaymentController().paypal));
+routesPayment.get("/",isAuth, handlerErros(new PaymentController().paypal));
 
-routesPayment.get(
+routesPayment.put(
     "/:id/pay",
     isAuth,
     handlerErros(new PaymentController().pay)

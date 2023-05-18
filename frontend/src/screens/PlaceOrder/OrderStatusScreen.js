@@ -19,7 +19,6 @@ const OrderStatusScreen = () => {
     const { id: orderId } = params;
     const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
 
-    
     const reducer = (state, action) => {
         switch (action.type) {
             case "FETCH_REQUEST":
@@ -72,12 +71,12 @@ const OrderStatusScreen = () => {
             loadingPay: false,
         });
 
-    const oders = async () => {
+    const orders = async () => {
         const id = orderId;
         const { token } = userInfo;
         dispatch({ type: "FETCH_REQUEST" });
         const response = await api.getOrder(id, token);
-
+       
         if (response.data.success) {
             dispatch({ type: "FETCH_SUCCESS", payload: response.data.order });
         }
@@ -86,10 +85,10 @@ const OrderStatusScreen = () => {
         }
     };
 
-    const loadingPaypalScript = async () => {
+    const loadingPaypalScript = async () => {        
         const { token } = userInfo;
         const response = await api.paypal(token);
-        if (response.success) {
+        if (response) {
             const { data: clientId } = response;
             paypalDispatch({
                 type: "resetOptions",
@@ -122,7 +121,7 @@ const OrderStatusScreen = () => {
             dispatch({
                 type: "PAY_REQUEST",
             });
-            const response = await api.paypalRequest(order.id, token, details);
+            const response = await api.paypalRequest(order._id, token, details);
             if (response.success) {
                 const { data } = response;
                 dispatch({
@@ -141,7 +140,7 @@ const OrderStatusScreen = () => {
     }
 
     function onError(err) {
-        toast.error('Problem in processing payment, try again');
+        toast.error("Problem in processing payment, try again");
     }
 
     useEffect(() => {
@@ -149,14 +148,14 @@ const OrderStatusScreen = () => {
             return navigate("/signin");
         }
         if (!order._id || successPay || (order._id && order._id !== orderId)) {
-            oders();
+            orders();
             if (successPay) {
-                dispatch({type:'PAY_RESET'})
+                dispatch({ type: "PAY_RESET" });
             }
         } else {
             loadingPaypalScript();
         }
-    }, [order, orderId, userInfo, navigate, paypalDispatch]);
+    }, [order, orderId, userInfo, navigate, paypalDispatch, successPay]);
 
     return (
         <div className="d-flex flex-column site-container">
@@ -245,22 +244,22 @@ const OrderStatusScreen = () => {
                                                 </Col>
                                             </Row>
                                         </ListGroup.Item>
-                                        {!order.isPaid && (
+
+                                        {order.isPaid ? (
+                                            <div></div>
+                                        ) : (
                                             <ListGroup.Item>
                                                 {isPending ? (
                                                     <LoadingBox></LoadingBox>
-                                                ) : (
-                                                    <div>
-                                                        <PayPalButtons 
-                                                            createOrder={
-                                                                createOrder
-                                                            }
-                                                            onApprove={
-                                                                onAprrove
-                                                            }
-                                                            onError={onError}
-                                                        ></PayPalButtons >
-                                                    </div>
+                                                            ) : (
+                                                                   
+                                                  <PayPalButtons
+                                                        createOrder={
+                                                            createOrder
+                                                        }
+                                                        onApprove={onAprrove}
+                                                        onError={onError}
+                                                    />
                                                 )}
                                                 {loadingPay && (
                                                     <LoadingBox></LoadingBox>
@@ -300,7 +299,7 @@ const OrderStatusScreen = () => {
                                     <Card.Title>Items</Card.Title>
                                     <ListGroup variant="flush">
                                         {order.orderItems.map((item) => (
-                                            <ListGroup.Item key={item.id}>
+                                            <ListGroup.Item key={item._id}>
                                                 {console.log("id", item._id)}
                                                 <Row className="align-items-center">
                                                     <Col md={6}>

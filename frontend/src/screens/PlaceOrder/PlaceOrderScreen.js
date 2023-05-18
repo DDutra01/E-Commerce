@@ -60,13 +60,13 @@ export default function PlaceOrderScreen() {
 
         dispatch({ type: "CREATE_REQUEST" });
         const response = await api.orderPayment(orderInfo, token);
-        console.log(response);
+       
         if (response) {
-            console.log("chegou aqui");
+          
             ctxDispatch({ type: "CART_CLEAR" });
             dispatch({ type: "SUCCESS_REQUEST" });
             localStorage.removeItem("cartItems");
-            navigate(`/order/${response.data.order._id}`);
+            navigate(`/order/${response.data.orderPayment._id}`);
         }
     };
 

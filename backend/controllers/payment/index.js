@@ -32,7 +32,7 @@ export class PaymentController {
                 res.send({
                     success: true,
                     message: "payment completed",
-                    isOrder,
+                    order: isOrder,
                 });
             })
             .catch((err) => {
