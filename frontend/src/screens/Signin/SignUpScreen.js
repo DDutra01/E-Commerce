@@ -3,12 +3,12 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import bcrypt from "bcryptjs";
 import Form from "react-bootstrap/Form";
-import { useApi } from "../../hooks/useApi";
 import { useContext, useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { Store } from "../../Context/Store/StoreContext";
 import TitlePage from "../../components/Title-page";
 import { toast } from "react-toastify";
+import { useUser } from "../../hooks/useUser";
 
 export default function SignUpScreen() {
     const navigate = useNavigate();
@@ -23,7 +23,7 @@ export default function SignUpScreen() {
 
     const { state, dispatch: ctxDispatch } = useContext(Store);
     const { userInfo } = state;
-    const api = useApi();
+    const api = useUser();
 
     const submitHandler = async (e) => {    
         e.preventDefault();

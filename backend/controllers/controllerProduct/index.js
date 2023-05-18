@@ -27,8 +27,7 @@ export class ProductController {
     async getIdProducts(req, res) {
         console.log("chegou", req.params)
         const isProduct = await Product.findById(req.params);
-        console.log("encontrei ==> :", isProduct)
-
+       
         if (!isProduct) {
             throw new NotFoundError("Product not found!");
         }

@@ -7,6 +7,8 @@ import ShippingAddressScreen from "../screens/Cart/ShippingAddressScreen";
 import SignUpScreen from "../screens/Signin/SignUpScreen";
 import PaymentMethodScreen from "../screens/PaymentMethod/PaymentMethodScreen";
 import PlaceOrderScreen from "../screens/PlaceOrder/PlaceOrderScreen";
+import OrderStatusScreen from "../screens/PlaceOrder/OrderStatusScreen";
+import OrderHistorryScreen from "../screens/PlaceOrder/OrderHistorryScreen";
 
 const MainRoutes = () => {
     return (
@@ -19,6 +21,9 @@ const MainRoutes = () => {
                 <Route path="/signup" element={<SignUpScreen />} />
                 <Route path="/payment" element={<PaymentMethodScreen />} />
                 <Route path="/placeorder" element={<PlaceOrderScreen />} />
+                <Route path="/order/:id" element={<OrderStatusScreen />} />
+                <Route path="/order/:id" element={<OrderStatusScreen />} />
+                <Route path="/orderHistory" element={<OrderHistorryScreen />} />
                 <Route
                     path="/shippingAddress"
                     element={<ShippingAddressScreen />}
