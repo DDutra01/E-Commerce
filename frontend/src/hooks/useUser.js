@@ -1,8 +1,7 @@
-import {api} from "../../src/Services/useApi";
+import { api } from "../../src/Services/useApi";
 import { toast } from "react-toastify";
 
 export const useUser = () => ({
- 
     signin: async (email, password) => {
         try {
             const response = await api.post("/user/signin", {
@@ -35,6 +34,27 @@ export const useUser = () => ({
             }
         } catch (error) {
             toast.error("something didn't go as expected, try again!");
+        }
+    },
+
+    update: async (token,user) => {
+        console.log('Enviei a api:',user)
+        try {
+            const response = await api.put(
+                "/user/update",user,
+                {
+                    headers: {
+                        authorization: `Bearer ${token}`,
+                    },
+                },
+                
+            );
+            console.log(response)
+            if (response.data.success) {
+                return response.data;
+            }            
+        } catch (error) {
+           return error
         }
     },
 });

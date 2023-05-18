@@ -4,6 +4,9 @@ import Product from "../../models/products/index.js";
 
 export class ProductController {
     async create(req, res) {
+        await Product.remove({})
+        const products = await Product.insertMany(data.products)
+        res.send(products)
       
     }
     async getAllProducts(req, res) {
@@ -12,6 +15,7 @@ export class ProductController {
         if (!products) {
             throw new NotFoundError('Not found products')
         }
+        console.log(products)
         res.send(products);
     }
     async getSlugProducts(req, res) {
@@ -24,8 +28,7 @@ export class ProductController {
         res.setHeader("Content-Type", "text/plain").send(isProduct);        
      }
    
-    async getIdProducts(req, res) {
-        console.log("chegou", req.params)
+    async getIdProducts(req, res) {      
         const isProduct = await Product.findById(req.params);
        
         if (!isProduct) {
