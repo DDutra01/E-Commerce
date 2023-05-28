@@ -10,7 +10,8 @@ import PlaceOrderScreen from "../screens/PlaceOrder/PlaceOrderScreen";
 import OrderStatusScreen from "../screens/PlaceOrder/OrderStatusScreen";
 import OrderHistorryScreen from "../screens/PlaceOrder/OrderHistorryScreen";
 import ProfileScreen from "../screens/User/Profile";
-
+import SearchPage from "../screens/Search/SearchPage";
+import ProtectedRoute from "../components/ProtecteRoute";
 
 const MainRoutes = () => {
     return (
@@ -18,15 +19,37 @@ const MainRoutes = () => {
             <Routes>
                 <Route path="/" element={<HomeScreen />} />
                 <Route path="/product/:slug" element={<ProductScreen />} />
+                <Route path="/search" element={<SearchPage />} />
                 <Route path="/cartShop" element={<CartScreen />} />
                 <Route path="/signin" element={<SigninScreen />} />
                 <Route path="/signup" element={<SignUpScreen />} />
-                <Route path="/profile" element={<ProfileScreen />} />
+                <Route
+                    path="/profile"
+                    element={
+                        <ProtectedRoute>
+                            <ProfileScreen />
+                        </ProtectedRoute>
+                    }
+                />
                 <Route path="/payment" element={<PaymentMethodScreen />} />
                 <Route path="/placeorder" element={<PlaceOrderScreen />} />
-                <Route path="/order/:id" element={<OrderStatusScreen />} />
-                <Route path="/order/:id" element={<OrderStatusScreen />} />
-                <Route path="/orderHistory" element={<OrderHistorryScreen />} />
+                <Route
+                    path="/order/:id"
+                    element={
+                        <ProtectedRoute>
+                            <OrderStatusScreen />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/orderHistory"
+                    element={
+                        <ProtectedRoute>
+                            <OrderHistorryScreen />
+                        </ProtectedRoute>
+                    }
+                />
                 <Route
                     path="/shippingAddress"
                     element={<ShippingAddressScreen />}

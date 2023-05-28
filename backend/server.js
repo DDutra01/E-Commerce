@@ -1,4 +1,4 @@
-import express from "express";
+import Express from "express";
 import cors from 'cors'
 import mongoose from "mongoose";
 import dotenv from 'dotenv'
@@ -11,9 +11,10 @@ import routesProduct from "./routes/Products/index.js";
 import routesUser from "./routes/Users/index.js";
 import routesOrder from "./routes/Orders/index.js";
 import routesPayment from "./routes/Payment/index.js";
+import routesSearch from "./routes/Search/index.js";
 
 dotenv.config()
-const app = express();
+const app = Express();
 
 // mongoose.Promise = global.Promise
 mongoose.set('strictQuery', false)
@@ -24,21 +25,23 @@ mongoose
     })
     .catch((error) => console.log(error));
 
-app.use(express.json());
-app.use(express.urlencoded({extended:true}));
+app.use(Express.json());
+app.use(Express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(logger("dev"));
 
 
 app.use("/payment", routesPayment);
 app.use("/products", routesProduct);
+app.use("/categories", routesProduct);
+app.use("/search", routesSearch);
 app.use("/user", routesUser);
 app.use("/order", routesOrder);
 app.use("/history", routesOrder);
 
 
 const __dirname = path.resolve();
-app.use(express.static(path.join(__dirname,'/frontend/build')))
+app.use(Express.static(path.join(__dirname,'/frontend/build')))
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'frontend/build/index.html')));
 app.use(middleErrors);
 

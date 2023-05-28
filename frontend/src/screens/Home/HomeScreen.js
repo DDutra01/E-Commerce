@@ -1,5 +1,4 @@
-import React, { useEffect, useReducer } from "react";
-import axios from "axios";
+import React, { useEffect, useReducer, useState } from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Product from "../../components/Product";
@@ -7,8 +6,12 @@ import LoadingBox from "../../components/LoadingBox";
 import MessageBox from "../../components/MessageBox";
 import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
-import { Container } from "react-bootstrap";
+import {Button, Nav } from "react-bootstrap";
 import TitlePage from "../../components/Title-page";
+import { Typography } from "@mui/material";
+import { LinkContainer } from "react-router-bootstrap";
+import { useProduct } from "../../hooks/useProducts";
+import { toast } from "react-toastify";
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -37,33 +40,101 @@ const HomeScreen = () => {
         loading: true,
         error: "",
     });
+    const api = useProduct();
+
+    const [sideBarOn, setSideBarOn] = useState(false);
+    const [categories, setCategories] = useState([]);
+
+    //get isOpen of the sideBar
+    const handleSideBarData = () => {
+        setSideBarOn(!sideBarOn);
+    };
+
+    const fetchDataHome = async () => {
+        dispatch({ type: "FETCH_REQUEST" });
+        const response = await api.getAllProducts();
+        if (error.type === "AllProducts") {
+            toast.error("It's not possible to get products.");
+            dispatch({ type: "FETCH_FAIL", payload: error.message });
+        }
+        dispatch({ type: "FETCH_SUCCESS", payload: response });
+
+        const responseCategories = await api.getAllCategories();
+        if (error.type === "AllCategories") {
+            toast.error("It's not possible to get categories.");
+        }
+        setCategories(responseCategories);
+    };
 
     useEffect(() => {
-        const fetchData = async () => {
-            dispatch({ type: "FETCH_REQUEST" });
-
-            try {
-                const result = await axios.get("/products/products");
-                dispatch({ type: "FETCH_SUCCESS", payload: result.data });
-            } catch (error) {
-                console.log("bateu o erro");
-                dispatch({ type: "FETCH_FAIL", payload: error.message });
-            }
-        };
-
-        fetchData();
+        fetchDataHome();
     }, []);
 
     return (
-        //<div className="d-flex flex-column site-container">
-        <div>
+        <div
+            className={
+                sideBarOn
+                    ? "site-container d-flex flex-column active-cont"
+                    : "site-container d-flex flex-column"
+            }
+        >
             <TitlePage title="Amazona"></TitlePage>
             <header>
-                <NavBar isShowIcons={true} />
+                <NavBar
+                    isShowIcons={true}
+                    onSideBar={sideBarOn}
+                    onToggle={handleSideBarData}
+                />
             </header>
-            <Container className="mt-3">
-                <main>
-                    <h1>Featured Products</h1>
+            {/* sideBar */}
+            <div
+                className={
+                    sideBarOn
+                        ? "active-nav side-navbar d-flex justify-content-between flex-wrap flex-column"
+                        : "side-navbar d-flex justify-content-between flex-wrap flex-column"
+                }
+            >
+                <Nav className="flex-column text-white w-100 p-2">
+                    <div className="d-flex justify-content-between p-2">
+                        <Nav.Item>
+                            <Typography variant="h5" component="h2">
+                                Categories
+                            </Typography>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <Button
+                                variant="secundary"
+                                size="md"
+                                onClick={() => setSideBarOn(false)}
+                            >
+                                <i className="fas fa-times-circle"></i>
+                            </Button>
+                        </Nav.Item>
+                    </div>
+
+                    {categories.map((category) => (
+                        <Nav.Item key={category}>
+                            <LinkContainer
+                                to={{
+                                    pathname: "/search",
+                                    search: `category=${category}`,
+                                }}
+                                onClick={() => setSideBarOn(false)}
+                            >
+                                <Nav.Link className="text-nav-sidebar">
+                                    {category}
+                                </Nav.Link>
+                            </LinkContainer>
+                            <div class="border-bottom mb-1 p-0"></div>
+                        </Nav.Item>
+                    ))}
+                </Nav>
+            </div>
+            <main>
+                <div className="site-container justify-content-center d-flex flex-column">
+                    <Typography variant="h1" component="h2">
+                        Products
+                    </Typography>
                     <div className="products">
                         {loading ? (
                             <LoadingBox />
@@ -85,8 +156,9 @@ const HomeScreen = () => {
                             </Row>
                         )}
                     </div>
-                </main>
-            </Container>
+                </div>
+            </main>
+
             <footer>
                 <Footer />
             </footer>
