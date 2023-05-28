@@ -96,6 +96,15 @@ const NavBar = (props) => {
                                     <LinkContainer to="/dashbaord">
                                         <NavDropdown.Item>Dashbaord</NavDropdown.Item>
                                     </LinkContainer>
+                                    <LinkContainer to="/poductlist">
+                                        <NavDropdown.Item>Products</NavDropdown.Item>
+                                    </LinkContainer>
+                                    <LinkContainer to="/orderlist">
+                                        <NavDropdown.Item>Orders</NavDropdown.Item>
+                                    </LinkContainer>
+                                    <LinkContainer to="/userlist">
+                                        <NavDropdown.Item>Users</NavDropdown.Item>
+                                    </LinkContainer>
                                 </NavDropdown>
                             )}
                         </Nav>
