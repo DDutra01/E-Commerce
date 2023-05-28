@@ -45,8 +45,7 @@ const OrderHistorryScreen = () => {
         setDeliveredValue(event.target.value);
     };
 
-   const filterOrders = async () => {
-        console.log('clicou')
+   const filterOrders = async () => {        
         const { token } = userInfo;
 
         const filters = {
@@ -91,7 +90,7 @@ const OrderHistorryScreen = () => {
             <TitlePage props="History"></TitlePage>
             <header>
                 <NavBar isShowIcons={true} />
-            </header>
+            </header>         
 
             {loading ? (
                 <div className="d- flex justify-content-center">

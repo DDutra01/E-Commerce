@@ -2,11 +2,12 @@ import Button from "react-bootstrap/Button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
-import {  useUser } from "../../hooks/useUser";
+import { useUser } from "../../hooks/useUser";
 import { useContext, useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { Store } from "../../Context/Store/StoreContext";
 import TitlePage from "../../components/Title-page";
+import { Typography } from "@mui/material";
 
 export default function SigninScreen() {
     const navigate = useNavigate();
@@ -25,7 +26,6 @@ export default function SigninScreen() {
         e.preventDefault();
         const user = await api.signin(email, password);
         if (user) {
-            
             ctxDispatch({ type: "USER_SIGNIN", payload: user });
             localStorage.setItem("userInfo", JSON.stringify(user));
             navigate(redirect || "/");
@@ -39,20 +39,12 @@ export default function SigninScreen() {
     }, [navigate, redirect, userInfo]);
 
     return (
-        <div>
+        <div className="signin">
             <TitlePage title="Amazona - Signin"></TitlePage>
-            <Container fluid="md">
-                <Container className="spacer" />
-                <Row mt={4} className="justify-content-center">
-                    <Col
-                        sm={4}
-                        style={{ padding: 20 }}
-                        className="square border rounded-5"
-                    >
-                        <h1 className="d-flex justify-content-center">
-                            {" "}
-                            Signin
-                        </h1>
+            <div className="container-signin">
+                <Row>
+                    <Col>                       
+                        <Typography variant="h3"> Signin</Typography>                     
                         <Form onSubmit={submitHandler} mt={2}>
                             <Container className="spacerSm" />
                             <Form.Group className="mb-3" controlId="email">
@@ -79,15 +71,19 @@ export default function SigninScreen() {
                                 <Button type="submit">Signin</Button>
                             </div>
                             <div className="d-flex justify-content-end">
-                                New customer?
+                                <Typography variant="body1">
+                                    New customer?
+                                </Typography>
                                 <Link to={`/signup?redirect=${redirect}`}>
-                                    Create your account
+                                    <Typography variant="body1">
+                                        Create your account
+                                    </Typography>
                                 </Link>
                             </div>
                         </Form>
                     </Col>
                 </Row>
-            </Container>
+            </div>
         </div>
     );
 }
