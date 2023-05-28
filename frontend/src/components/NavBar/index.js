@@ -93,16 +93,16 @@ const NavBar = (props) => {
                             )}
                             {userInfo && userInfo.isAdmin && (
                                 <NavDropdown title="Admin" id='admin-nav-dropdown'>
-                                    <LinkContainer to="/dashbaord">
+                                    <LinkContainer to="/admin/dashbaord">
                                         <NavDropdown.Item>Dashbaord</NavDropdown.Item>
                                     </LinkContainer>
-                                    <LinkContainer to="/poductlist">
+                                    <LinkContainer to="/admin/poductlist">
                                         <NavDropdown.Item>Products</NavDropdown.Item>
                                     </LinkContainer>
-                                    <LinkContainer to="/orderlist">
+                                    <LinkContainer to="/admin/orderlist">
                                         <NavDropdown.Item>Orders</NavDropdown.Item>
                                     </LinkContainer>
-                                    <LinkContainer to="/userlist">
+                                    <LinkContainer to="/admin/userlist">
                                         <NavDropdown.Item>Users</NavDropdown.Item>
                                     </LinkContainer>
                                 </NavDropdown>

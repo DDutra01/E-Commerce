@@ -12,6 +12,8 @@ import OrderHistorryScreen from "../screens/PlaceOrder/OrderHistorryScreen";
 import ProfileScreen from "../screens/User/Profile";
 import SearchPage from "../screens/Search/SearchPage";
 import ProtectedRoute from "../components/ProtecteRoute";
+import Dashboard from "../screens/Dashboard/Dashboard";
+import AdminRoute from "../components/AdminRoute/AdminRoute";
 
 const MainRoutes = () => {
     return (
@@ -39,6 +41,14 @@ const MainRoutes = () => {
                         <ProtectedRoute>
                             <OrderStatusScreen />
                         </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/admin/dashbaord"
+                    element={
+                        <AdminRoute>
+                            <Dashboard />
+                        </AdminRoute>
                     }
                 />
 
